@@ -24,7 +24,7 @@ var time = new Date(new Date().getTime() - 60 * 1000)
   .toISOString()
   .substring(0, 16);
 
-exec(`tail -n 1000 mysql-slow.log  `, {maxBuffer: 1024 * 1000} ,function (error, stdout, stderr) {
+exec(`tail -n 1000 sloth.txt  `, {maxBuffer: 1024 * 1000} ,function (error, stdout, stderr) {
   if (error) {
     console.log(
       'error>>>>>>>>>>>>>>>>>>>>>>>: ',
