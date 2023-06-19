@@ -58,7 +58,7 @@ exec(`tail -n 1000 mysql-slow.log `, {maxBuffer: 1024 * 1000} ,function (error, 
           if (err) throw err;
           connection.query(
             `INSERT INTO slow_queries (source, db_type, query_id, query, query_time, row_examined, row_sent) VALUES (
-              ?,?,?,?,?,?
+              ?,?,?,?,?,?,?
               )`,
             [source, dbType, '1', rawQuery, queryTime, rowExamined, rowSent],
             (error, results) => {
