@@ -11,7 +11,7 @@ const exec = require('child_process').exec;
 const mysql = require('mysql');
 const pool = mysql.createPool({
   connectionLimit: 150,
-  host: '35.167.1.235',
+  host: '172.31.10.103',
   user: 'rohangarg',
   password: '-HrDfKMS3o5Lz3Ml',
   database: 'db_sloth',
@@ -57,7 +57,7 @@ exec(`tail -n 1000 sloth.txt `, function (error, stdout, stderr) {
             `INSERT INTO slow_queries (source, query_id, query, query_time, row_examined, row_sent) VALUES (
               ?,?,?,?,?,?
               )`,
-            ['hippo-dev', '1', rawQuery, queryTime, rowExamined, rowSent],
+            ['hippo-slave', '1', rawQuery, queryTime, rowExamined, rowSent],
             (error, results) => {
               connection.release();
               if (error) throw error;
