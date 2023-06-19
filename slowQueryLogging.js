@@ -17,7 +17,7 @@ const pool = mysql.createPool({
   database: 'db_sloth',
 });
 
-let time = new Date(new Date().getTime() - 60 * 1000)
+var time = new Date(new Date().getTime() - 60 * 1000)
   .toISOString()
   .substring(0, 16);
 
@@ -32,16 +32,16 @@ exec(`tail -n 5000 mysql-slow.log `, function (error, stdout, stderr) {
     );
     statusCode = error.code;
   } else {
-    for (let query of stdout.split('Time:')) {
+    for (var query of stdout.split('Time:')) {
       console.log('#######################',time, query);
 	    if(!query.includes(time)){console.log("query rejected>>>>>>"); continue;}
 
-	    let rawQuery = query.match(/;([^;]*);/);
+	    var rawQuery = query.match(/;([^;]*);/);
       if (rawQuery && rawQuery[0]) {
-        let queryTime = query.match(/Query_time: (\d+\.\d+)\s+/)[1];
-        let lockTime = query.match(/Lock_time: (\d+\.\d+)\s+/)[1];
-        let rowSent = query.match(/Rows_sent: (\d+)\s+/)[1];
-        let rowExamined = query.match(/Rows_examined: (\d+)\s+/)[1];
+        var queryTime = query.match(/Query_time: (\d+\.\d+)\s+/)[1];
+        var lockTime = query.match(/Lock_time: (\d+\.\d+)\s+/)[1];
+        var rowSent = query.match(/Rows_sent: (\d+)\s+/)[1];
+        var rowExamined = query.match(/Rows_examined: (\d+)\s+/)[1];
         rawQuery = rawQuery[0].replace(';\n', '');
         console.log({
           queryTime,
