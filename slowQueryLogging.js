@@ -17,6 +17,9 @@ const pool = mysql.createPool({
   database: 'db_sloth',
 });
 
+var source = `HIPPO`;
+var dbType = `MASTER`;
+
 var time = new Date(new Date().getTime() - 60 * 1000)
   .toISOString()
   .substring(0, 16);
@@ -54,10 +57,10 @@ exec(`tail -n 2000 mysql-slow.log `, {maxBuffer: 1024 * 500} ,function (error, s
         pool.getConnection((err, connection) => {
           if (err) throw err;
           connection.query(
-            `INSERT INTO slow_queries (source, query_id, query, query_time, row_examined, row_sent) VALUES (
+            `INSERT INTO slow_queries (source, db_type, query_id, query, query_time, row_examined, row_sent) VALUES (
               ?,?,?,?,?,?
               )`,
-            ['hippo-slave', '1', rawQuery, queryTime, rowExamined, rowSent],
+            [source, dbType, '1', rawQuery, queryTime, rowExamined, rowSent],
             (error, results) => {
               connection.release();
               if (error) throw error;
