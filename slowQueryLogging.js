@@ -21,7 +21,7 @@ let time = new Date(new Date().getTime() - 60 * 1000)
   .toISOString()
   .substring(0, 16);
 
-exec(`tail -n 1000 sloth.txt `, function (error, stdout, stderr) {
+exec(`tail -n 5000 mysql-slow.log `, function (error, stdout, stderr) {
   if (error) {
     console.log(
       'error>>>>>>>>>>>>>>>>>>>>>>>: ',
