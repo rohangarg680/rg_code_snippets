@@ -12,6 +12,7 @@ const pool = mysql.createPool({
 var source = 'HIPPO';
 var server = 'BACKEND';
 
+let taskCounter = 0;
 exec(`tail -n 10000 fugu-requests.log.20-06-2023 `, function (error, stdout, stderr) {
   if (error) {
     console.log('error>>> ', error, stderr, ':::::', stdout);
@@ -19,6 +20,7 @@ exec(`tail -n 10000 fugu-requests.log.20-06-2023 `, function (error, stdout, std
   } else {
     for (let request of stdout.split('\n')) {
       try{
+        taskCounter++;
       let requestParsed = JSON.parse(request);
       console.log(
         requestParsed,
@@ -39,6 +41,10 @@ exec(`tail -n 10000 fugu-requests.log.20-06-2023 `, function (error, stdout, std
               connection.release();
               if (error) throw error;
               console.log(results);
+              taskCounter--;
+              if(taskCounter == 0){
+                process.exit();
+              }
             }
           );
         });
@@ -49,4 +55,4 @@ exec(`tail -n 10000 fugu-requests.log.20-06-2023 `, function (error, stdout, std
 }
 });
 
-process.exit();
+
