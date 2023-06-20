@@ -9,8 +9,8 @@ const pool = mysql.createPool({
   database: 'db_sloth',
 });
 
-var source = process.argv[1] || 'HIPPO';
-var server = process.argv[2] || 'BACKEND';
+var source = process.argv[2] || 'HIPPO';
+var server = process.argv[3] || 'BACKEND';
 
 let taskCounter = 0;
 exec(`tail -n 10000 fugu-requests.log.20-06-2023 `, function (error, stdout, stderr) {
