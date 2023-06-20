@@ -20,7 +20,7 @@ exec(`tail -n 10000 fugu-requests.log.20-06-2023 `, function (error, stdout, std
   } else {
     for (let request of stdout.split('\n')) {
       try{
-        taskCounter++;
+      taskCounter++;
       let requestParsed = JSON.parse(request);
       console.log(
         requestParsed,
@@ -30,7 +30,6 @@ exec(`tail -n 10000 fugu-requests.log.20-06-2023 `, function (error, stdout, std
       let url = requestParsed.url;
       let requestPayload = requestParsed.request;
       let responseTime = requestParsed.responseTime.split(' ')[0];
-
       pool.getConnection((err, connection) => {
           if (err) throw err;
           connection.query(
@@ -50,6 +49,7 @@ exec(`tail -n 10000 fugu-requests.log.20-06-2023 `, function (error, stdout, std
         });
     }catch(err){
       console.error("err>>>",err, request)
+      taskCounter--;
     }
   }
 }
