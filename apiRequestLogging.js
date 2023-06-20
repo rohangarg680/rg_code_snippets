@@ -32,7 +32,7 @@ exec(`tail -n 10000 fugu-requests.log.20-06-2023 `, function (error, stdout, std
       pool.getConnection((err, connection) => {
           if (err) throw err;
           connection.query(
-            `INSERT INTO api_logs (source, server, url, request,request_time) 
+            `INSERT INTO api_logs (source, server, url, request, response_time) 
              VALUES (?,?,?,?,?)`,
             [source, server, url, requestPayload, responseTime],
             (error, results) => {
