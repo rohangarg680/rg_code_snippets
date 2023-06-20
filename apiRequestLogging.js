@@ -28,8 +28,7 @@ exec(`tail -n 10000 fugu-requests.log.20-06-2023 `, function (error, stdout, std
       let requestPayload = requestParsed.request;
       let responseTime = requestParsed.responseTime.split(' ')[0];
 
-      if (raw_query && raw_query.length) {
-        pool.getConnection((err, connection) => {
+      pool.getConnection((err, connection) => {
           if (err) throw err;
           connection.query(
             `INSERT INTO api_logs (source, server, url, request,request_time) 
@@ -42,7 +41,6 @@ exec(`tail -n 10000 fugu-requests.log.20-06-2023 `, function (error, stdout, std
             }
           );
         });
-      }
     }
   }
 });
