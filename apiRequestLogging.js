@@ -46,5 +46,3 @@ exec(`tail -n 10000 fugu-requests.log.20-06-2023 `, function (error, stdout, std
     }
   }
 });
-
-return;
