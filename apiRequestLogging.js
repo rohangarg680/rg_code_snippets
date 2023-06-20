@@ -12,7 +12,7 @@ const pool = mysql.createPool({
 var source = 'HIPPO';
 var server = 'BACKEND';
 
-exec(`tail -n 10000 apiLog.txt `, function (error, stdout, stderr) {
+exec(`tail -n 10000 fugu-requests.log.20-06-2023 `, function (error, stdout, stderr) {
   if (error) {
     console.log('error>>> ', error, stderr, ':::::', stdout);
     statusCode = error.code;
