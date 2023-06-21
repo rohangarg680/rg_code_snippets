@@ -48,7 +48,7 @@ pool.getConnection((err, connection) => {
             }
             if (new Date(requestParsed.timestamp).getMinutes() == new Date(new Date().getTime() - 60 * 1000).getMinutes()) {
               taskCounter--;
-              console.log("REQUEST REJECTED>>>>>>>", requestParsed.timestamp)
+              console.log("REQUEST REJECTED>>>>>>>", requestParsed.timestamp, new Date())
               continue;
             }
 
