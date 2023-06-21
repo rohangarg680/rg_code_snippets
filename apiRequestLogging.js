@@ -27,7 +27,7 @@ pool.getConnection((err, connection) => {
         return;
       }
   console.log("MYSQL is Connected");
-  console.log("Source: ",source,"server :",server,"threshold:"threshold);
+  console.log("Source: ",source,"server :",server,"threshold:", threshold);
   
   exec("ls -lt  | awk 'NR==2{print $NF}'", function (error, stdout, stderr) {
     console.log("latest logfile>>>>>", stdout);
