@@ -24,6 +24,13 @@ exec(`tail -n 10000 ${stdout} `, function (error, stdout, stderr) {
       try{
       taskCounter++;
       let requestParsed = JSON.parse(request);
+      
+      if(new Date(requestParsed.timestamp).getMinutes()  == new Date(new Date().getTime() - 60*1000).getMinutes()){
+        taskCounter--;
+        console.log("REQUEST REJECTED>>>>>>>",requestParsed.timestamp)
+        continue;
+      }
+        
       console.log(
         requestParsed,
         requestParsed.url,
