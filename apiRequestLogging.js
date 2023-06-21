@@ -11,6 +11,7 @@ const pool = mysql.createPool({
 
 var source = process.argv[2] || 'HIPPO';
 var server = process.argv[3] || 'BACKEND-DEV';
+var threshold = process.argv[4] || 500; //ms
 
 let taskCounter = 0;
 exec("ls -lt  | awk 'NR==2{print $NF}'",function (error, stdout, stderr){
@@ -36,9 +37,16 @@ exec(`tail -n 10000 ${stdout} `, function (error, stdout, stderr) {
         requestParsed.url,
         parseInt(requestParsed.responseTime.split(' ')[0])
       );
+
       let url = requestParsed.url;
       let requestPayload = requestParsed.request;
       let responseTime = requestParsed.responseTime.split(' ')[0];
+
+      if(responseTime < parseInt(threshold)){
+        console.log("REQUEST REJECTED responseTime >>>>>>>",responseTime, parseInt(threshold))
+        taskCounter--;
+      }
+        
       pool.getConnection((err, connection) => {
           if (err) throw err;
           connection.query(
