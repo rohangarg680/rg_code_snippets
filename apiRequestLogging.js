@@ -16,7 +16,7 @@ var threshold = process.argv[4] || 500; //ms
 let taskCounter = 0;
 exec("ls -lt  | awk 'NR==2{print $NF}'",function (error, stdout, stderr){
 console.log("latest logfile>>>>>",stdout);
-exec(`tail -n 5000 ${stdout} `,{maxBuffer: 1024 * 10000} , function (error, stdout, stderr) {
+exec(`tail -n 5000 ${stdout} `,{maxBuffer: 1024 * 100000} , function (error, stdout, stderr) {
   if (error) {
     console.log('error>>> ', error, stderr, ':::::', stdout);
     statusCode = error.code;
