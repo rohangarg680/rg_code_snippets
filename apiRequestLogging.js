@@ -17,13 +17,20 @@ var threshold = process.argv[4] || 200; //ms
 
 let taskCounter = 0;
 
+pool.on('error',(err)=>{
+console.log("Mysql Error>>>>", err)
+});
 
-pool.on('connection', (connection) => {
-  numConnectionsInPool++;
-  console.log('NUMBER OF CONNECTION IN POOL : ', numConnectionsInPool);
+pool.getConnection((err, connection) => {
+      if(err) {
+        console.error('error connecting: ' + err.stack);
+        return;
+      }
+  console.log("MYSQL is Connected");
+  
   exec("ls -lt  | awk 'NR==2{print $NF}'", function (error, stdout, stderr) {
     console.log("latest logfile>>>>>", stdout);
-    exec(`tail -n 5000 ${stdout} `, { maxBuffer: 1024 * 100000 }, function (error, stdout, stderr) {
+    exec(`tail -n 200 ${stdout} `, { maxBuffer: 1024 * 100000 }, function (error, stdout, stderr) {
       if (error) {
         console.log('error>>> ', error, stderr, ':::::', stdout);
         statusCode = error.code;
@@ -31,8 +38,14 @@ pool.on('connection', (connection) => {
         for (let request of stdout.split('\n')) {
           try {
             taskCounter++;
-            let requestParsed = JSON.parse(request);
-
+            let requestParsed
+            if(request){
+             requestParsed = JSON.parse(request);
+            }else{
+              console.log("request>>>>>>>>>>",request);
+              taskCounter--;
+              continue;
+            }
             if (new Date(requestParsed.timestamp).getMinutes() == new Date(new Date().getTime() - 60 * 1000).getMinutes()) {
               taskCounter--;
               console.log("REQUEST REJECTED>>>>>>>", requestParsed.timestamp)
@@ -40,7 +53,7 @@ pool.on('connection', (connection) => {
             }
 
             console.log(
-              requestParsed,
+              // requestParsed,
               requestParsed.url,
               parseInt(requestParsed.responseTime.split(' ')[0])
             );
@@ -52,6 +65,7 @@ pool.on('connection', (connection) => {
             if (responseTime < parseInt(threshold)) {
               console.log("REQUEST REJECTED responseTime >>>>>>>", responseTime, parseInt(threshold))
               taskCounter--;
+              continue;
             }
 
             pool.getConnection((err, connection) => {
