@@ -63,6 +63,10 @@ pool.getConnection((err, connection) => {
 	      taskCounter--;
               if (error) throw error;
               console.log(results);
+		if (taskCounter == 0) {
+                  connection.relase();
+                  process.exit();
+        	}
             }
           );
 
