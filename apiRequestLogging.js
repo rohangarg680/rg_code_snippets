@@ -17,18 +17,18 @@ var threshold = process.argv[3] || 200; //ms
 
 let taskCounter = 0;
 
-pool.on('error',(err)=>{
-console.log("Mysql Error>>>>", err)
+pool.on('error', (err) => {
+  console.log("Mysql Error>>>>", err)
 });
 
 pool.getConnection((err, connection) => {
-      if(err) {
-        console.error('error connecting: ' + err.stack);
-        return;
-      }
+  if (err) {
+    console.error('error connecting: ' + err.stack);
+    return;
+  }
   console.log("MYSQL is Connected");
-  console.log("Source: ",source,"server :",server,"threshold:", threshold);
-  
+  console.log("Source: ", source, "server :", server, "threshold:", threshold);
+
   exec("ls -lt  | awk 'NR==2{print $NF}'", function (error, stdout, stderr) {
     console.log("latest logfile>>>>>", stdout);
     exec(`tail -n 200 ${stdout} `, { maxBuffer: 1024 * 100000 }, function (error, stdout, stderr) {
@@ -40,10 +40,10 @@ pool.getConnection((err, connection) => {
           try {
             taskCounter++;
             let requestParsed
-            if(request){
-             requestParsed = JSON.parse(request);
-            }else{
-              console.log("request>>>>>>>>>>",request);
+            if (request) {
+              requestParsed = JSON.parse(request);
+            } else {
+              console.log("request>>>>>>>>>>", request);
               taskCounter--;
               continue;
             }
@@ -69,23 +69,21 @@ pool.getConnection((err, connection) => {
               continue;
             }
 
-            pool.getConnection((err, connection) => {
-              if (err) throw err;
-              connection.query(
-                `INSERT INTO api_logs (source, server, url, request, response_time) 
+            connection.query(
+              `INSERT INTO api_logs (source, server, url, request, response_time) 
              VALUES (?,?,?,?,?)`,
-                [source, server, url, requestPayload, responseTime],
-                (error, results) => {
-                  connection.release();
-                  if (error) throw error;
-                  console.log(results);
-                  taskCounter--;
-                  if (taskCounter == 0) {
-                    process.exit();
-                  }
+              [source, server, url, requestPayload, responseTime],
+              (error, results) => {
+                //connection.release();
+                if (error) throw error;
+                console.log(results);
+                taskCounter--;
+                if (taskCounter == 0) {
+                  connection.relase();
+                  process.exit();
                 }
-              );
-            });
+              }
+            );
           } catch (err) {
             console.error("err>>>", err, request)
             taskCounter--;
