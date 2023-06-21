@@ -11,7 +11,7 @@ const pool = mysql.createPool({
 
 var source = process.argv[2] || 'HIPPO';
 var server = process.argv[3] || 'BACKEND-DEV';
-var threshold = process.argv[4] || 500; //ms
+var threshold = process.argv[4] || 200; //ms
 
 let taskCounter = 0;
 exec("ls -lt  | awk 'NR==2{print $NF}'",function (error, stdout, stderr){
