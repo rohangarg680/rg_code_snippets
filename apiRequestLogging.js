@@ -13,7 +13,9 @@ var source = process.argv[2] || 'HIPPO';
 var server = process.argv[3] || 'BACKEND';
 
 let taskCounter = 0;
-exec(`tail -n 10000 fugu-requests.log.20-06-2023 `, function (error, stdout, stderr) {
+exec("ls -lt  | awk 'NR==2{print $NF}'",function (error, stdout, stderr){
+console.log("latest logfile>>>>>",stdout);
+exec(`tail -n 10000 ${stdout} `, function (error, stdout, stderr) {
   if (error) {
     console.log('error>>> ', error, stderr, ':::::', stdout);
     statusCode = error.code;
@@ -54,5 +56,7 @@ exec(`tail -n 10000 fugu-requests.log.20-06-2023 `, function (error, stdout, std
   }
 }
 });
+})
+
 
 
