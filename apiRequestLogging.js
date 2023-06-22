@@ -79,7 +79,7 @@ pool.getConnection((err, connection) => {
                 console.log(results);
                 taskCounter--;
                 if (taskCounter == 0) {
-                  connection.relase();
+                  connection.release();
                   process.exit();
                 }
               }
